@@ -1,6 +1,4 @@
-import re
 from flask import Flask, request, jsonify, render_template
-
 from models import db, connect_db, Cupcake
 
 app = Flask(__name__)
@@ -22,3 +20,18 @@ def get_cupcake(id):
     """Returns JSON about one particular cupcake"""
     cc = Cupcake.query.get_or_404(id)
     return jsonify(cupcake=cc.serialize())
+
+@app.route('/api/cupcakes', methods=["POST"])
+def create_cupcake():
+    """Creates a new cupcake, and returns the JSON of that cupcake"""
+    
+    new_cc = Cupcake(
+        flavor=request.json['flavor'],
+        size=request.json['size'],
+        rating=request.json['rating'],
+        image=request.json['image' or None]
+    )
+
+    db.session.add(new_cc)
+    db.session.commit()
+    return (jsonify(cupcake=new_cc.serialize()), 201)
