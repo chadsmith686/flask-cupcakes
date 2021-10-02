@@ -9,6 +9,10 @@ app.config['SECRET_KEY'] = "secret"
 
 connect_db(app)
 
+@app.route('/')
+def root():
+    return render_template('index.html')
+
 @app.route('/api/cupcakes')
 def list_cupcakes():
     """Returns JSON with all cupcakes"""
